@@ -6,11 +6,13 @@ class App extends Component {
   constructor(){
     super();
     this.state = {
-      location : 'none',
+      latitude : 'none',
+      longitude : 'none',
       distance : '5',
       fuelType : 'reg',
     }
-    this.handleClick = this.handleClick.bind(this)
+    this.getLocation = this.getLocation.bind(this)
+    this.getData = this.getData.bind(this)
     this.showPosition = this.showPosition.bind(this)
     this.changeHandler = this.changeHandler.bind(this)
   }
@@ -22,23 +24,26 @@ class App extends Component {
   }
 
   showPosition(position) {
-    var foo = position.coords.latitude + ' , ' +position.coords.longitude;
+    var latitude = position.coords.latitude;
+    var longitude = position.coords.longitude;
     this.setState({
-      location : foo
-    },()=>alert('Location Received'))
+      latitude : latitude,
+      longitude : longitude,
+    },()=>console.log(this.state),alert('Location Received'))
     }
   
-  handleClick() {
-    if (this.state.location === 'none'){navigator.geolocation.getCurrentPosition(this.showPosition);}
+  getLocation() {
+    navigator.geolocation.getCurrentPosition(this.showPosition);
+  }
 
-
-    
-    // axios
-    // .get(`http://api.mygasfeed.com/stations/radius/32.708859/-117.156273/5/reg/10/r7i0ude8ep.json`)
-    // .then(
-    //   res => {
-    //   const persons = res.data;
-    //   console.log(persons)})
+  getData() {
+    var url = 'http://api.mygasfeed.com/stations/radius/' + this.state.latitude + '/' + this.state.longitude + '/' + this.state.distance + '/' + this.state.fuelType + '/distance/r7i0ude8ep.json'
+    axios
+    .get(url)
+    .then(
+      res => {
+      const data = res.data;
+      console.log(data)})
   }
 
 
@@ -48,12 +53,12 @@ class App extends Component {
       <div className='container'>
         <div>
           <h1>Dollars per Gallon</h1>
-          <a className='btn btn-warning' onClick={this.handleClick}>Location</a>
+          <a className='btn btn-warning' onClick={this.getLocation}>Location</a>
           reg, med, pre, or diesel
           <input name='fuelType' placeholder='fuel type' onChange={this.changeHandler}></input>
           Number 1-50
           <input  name='distance' placeholder='distance' onChange={this.changeHandler} type='number'></input>
-          <a className='btn btn-success' onClick={this.handleClick}>GET GAS</a>
+          <a className='btn btn-success' onClick={this.getData}>GET GAS</a>
         </div>
       </div>
     );
