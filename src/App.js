@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import axios from 'axios';
+import MapContainer from './MapContainer.js';
 
 class App extends Component {
   constructor(){
@@ -9,7 +10,7 @@ class App extends Component {
       latitude : 'none',
       longitude : 'none',
       distance : '5',
-      fuelType : 'reg',
+      stations : []
     }
     this.getLocation = this.getLocation.bind(this)
     this.getData = this.getData.bind(this)
@@ -37,29 +38,44 @@ class App extends Component {
   }
 
   getData() {
-    var url = 'http://api.mygasfeed.com/stations/radius/' + this.state.latitude + '/' + this.state.longitude + '/' + this.state.distance + '/' + this.state.fuelType + '/distance/r7i0ude8ep.json'
+    var url = 'http://api.mygasfeed.com/stations/radius/' + this.state.latitude + '/' + this.state.longitude + '/' + this.state.distance + '/reg/distance/r7i0ude8ep.json'
     axios
     .get(url)
     .then(
       res => {
       const data = res.data;
-      console.log(data)})
+      this.setState({
+        stations: this.state.stations.concat(data.stations)
+      }, ()=>console.log(this.state))
+      })
   }
 
 
 
   render() {
     return (
-      <div className='container'>
-        <div>
-          <h1>Dollars per Gallon</h1>
-          <a className='btn btn-warning' onClick={this.getLocation}>Location</a>
-          reg, med, pre, or diesel
-          <input name='fuelType' placeholder='fuel type' onChange={this.changeHandler}></input>
-          Number 1-50
-          <input  name='distance' placeholder='distance' onChange={this.changeHandler} type='number'></input>
-          <a className='btn btn-success' onClick={this.getData}>GET GAS</a>
-        </div>
+      <div className='container mt-3'>
+        <h1>Gassed Up</h1>
+        <h5>Find the gas stations</h5>
+        <hr />
+          <div className='card col-5'>
+            <div className='card-body'>
+              <div className='row pb-2'>
+                <h5 className='ml-2 mr-2'>
+                  First:
+                </h5>
+                <a className='btn btn-warning' onClick={this.getLocation}>Get Your Location</a>
+              </div>
+              <div className='row pb-2'>
+                <h5 className='ml-2 mr-2'>Distance to search:</h5>
+                <input  name='distance' placeholder='miles(1-50)' onChange={this.changeHandler} type='number'></input>
+              </div>
+              <a className='btn btn-success btn-block' onClick={this.getData}>Find stations!</a>
+            </div>
+          </div>
+          <div name='mapDiv'>
+            {<MapContainer />}
+          </div>
       </div>
     );
   }

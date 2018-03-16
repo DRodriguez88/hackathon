@@ -1,28 +1,22 @@
-.App {
-  text-align: center;
+body {
+  background: #32d632; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #b3e6eb, #32d632);
+  background: linear-gradient(to left, #b3e6eb, #32d632);
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+#headerPic {
+  background-image: url(gasThing.jpg);
+  background-repeat: no-repeat;
+  background-position: top;
+  height: 200px
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+.card {
+  background: #32d632; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #b3e6eb, #32d632);
+  background: linear-gradient(to right, #b3e6eb, #32d632);
 }
 
-.App-title {
-  font-size: 1.5em;
-}
-
-.App-intro {
-  font-size: large;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+MapContainer {
+  width: 50%
 }
