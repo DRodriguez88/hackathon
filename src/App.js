@@ -46,6 +46,7 @@ class App extends Component {
     .then(
       res => {
       const data = res.data;
+      console.log(data);
       this.setState({
         stations: this.state.stations.concat(data.stations)
       }, ()=>this.findCheapest())
@@ -53,15 +54,14 @@ class App extends Component {
   }
 
   findCheapest() {
-    var lowest = this.state.stations[0];
-    // for(let i=0; i<this.state.stations.length-1; i++){
-    //   if(this.state.stations[i] < this.state.stations[i+1].reg_price){
-    //     lowest = this.state.stations[i]
-    //   }
-    // }
+    var cheapest = this.state.stations[0];
+    for(let i=0; i < this.state.stations.length-1; i++){
+      if(this.state.stations[i].reg_price === 'N/A'){console.log(this.state.stations[i].reg_price)}
+      else if(cheapest.reg_price > this.state.stations[i+1].reg_price){cheapest = this.state.stations[i+1]}
+    }
     this.setState({
-      cheapest: lowest
-    }, ()=>console.log(this.state))
+      cheapest: cheapest
+    })
   }
 
 
@@ -97,12 +97,12 @@ class App extends Component {
                   </div>
                   <div className='card-body'>
                     <div className='row'>
-                      <div className='card'>
+                      <div className='card p-2'>
                         <p>The cheapest gas within {this.state.distance} miles:</p>
                         <p className='font-weight-bold'>{this.state.cheapest.address}</p>
                         <p className='font-weight-bold'>{this.state.cheapest.city}, {this.state.cheapest.region}, {this.state.cheapest.zip}</p>
                       </div>
-                      <div className='card ml-4'>
+                      <div className='card ml-4 p-2'>
                         <h3>Regular Unleaded</h3>
                         <h1 className='ml-5 font-weight-bold'>${this.state.cheapest.reg_price}</h1>
                       </div>
