@@ -1,20 +1,23 @@
 import React, { Component } from 'react';
 import './App.css';
 import {Map, Marker, GoogleApiWrapper} from 'google-maps-react';
-import MarkerMaker from './MarkerMaker.js';
  
 export class MapContainer extends Component {
+  mapZoom = 10;
+  style = {
+    height: '60%',
+    width: '80%'
+  }
 
   render() {
       return (
-        <Map google={this.props.google} zoom={2}>
-          {/* { this.props.stations.map((station, index) => 
-              <MarkerMaker google={this.props.google} 
-                key={index} 
-                lat={parseFloat(station.lat)} 
-                lng={parseFloat(station.lng)}/>
-              )} */}
-
+        <Map 
+          google={this.props.google} 
+          zoom={this.mapZoom}
+          style={this.style} 
+          center={{
+            lat: 32.7090788, 
+            lng: -117.15620969999999}}>
           { 
             this.props.stations.map((station, index) => 
               <Marker 
@@ -25,9 +28,10 @@ export class MapContainer extends Component {
                   lng: parseFloat(station.lng)
                 }}
               />
-          )}    
+            )
+          }    
           
-          <Marker id='homeMarker' google={this.props.google} position={{lat: [this.props.lat], lng: [this.props.lng]}}/>
+        <Marker id='homeMarker' google={this.props.google} position={{lat: [this.props.lat], lng: [this.props.lng]}}/>
         </Map>
       );
     }
