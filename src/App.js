@@ -74,7 +74,7 @@ class App extends Component {
             </div>
           </div>
           <div name='mapDiv'>
-            {<MapContainer />}
+            {<MapContainer stations={this.state.stations} lat={this.state.latitude} lng={this.state.longitude}/>}
           </div>
       </div>
     );
