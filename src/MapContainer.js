@@ -10,8 +10,6 @@ export class MapContainer extends Component {
   }
 
   render() {
-      // let pos = { lat: 36.70, lng: -117.15 };
-
       let lat = parseFloat(this.props.lat);
       let lng = parseFloat(this.props.lng);
       let pos = { lat, lng };
@@ -22,10 +20,7 @@ export class MapContainer extends Component {
           zoom={this.props.zoom}
           style={this.style} 
           center={pos}
-          xcenter={{
-            lat: 32.7090788, 
-            lng: -117.15620969999999}}
-          >
+           >
           { 
             this.props.stations.map((station, index) => 
               <Marker 
