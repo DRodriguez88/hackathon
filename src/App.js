@@ -7,23 +7,23 @@ class App extends Component {
   constructor(){
     super();
     this.state = {
-      latitude : 'none',
-      longitude : 'none',
+      latitude : 40.400186,
+      longitude : -99.551047,
       distance : '5',
       stations : [],
       cheapest: '',
+      zoom: 3,
     }
     this.getLocation = this.getLocation.bind(this)
     this.getData = this.getData.bind(this)
     this.showPosition = this.showPosition.bind(this)
     this.changeHandler = this.changeHandler.bind(this)
     this.findCheapest = this.findCheapest.bind(this)
+    this.zoomer = this.zoomer.bind(this)
   }
 
-  changeHandler(e) {
-    this.setState({
-      [e.target.name] : e.target.value
-    },()=>console.log(this.state))
+  componentWillMount() {
+    this.getLocation()
   }
 
   showPosition(position) {
@@ -32,11 +32,18 @@ class App extends Component {
     this.setState({
       latitude : latitude,
       longitude : longitude,
-    },alert('Location Received'))
+      zoom : 12
+    })
     }
   
   getLocation() {
     navigator.geolocation.getCurrentPosition(this.showPosition);
+  }
+
+  changeHandler(e) {
+    this.setState({
+      [e.target.name] : e.target.value
+    })
   }
 
   getData() {
@@ -56,12 +63,40 @@ class App extends Component {
   findCheapest() {
     var cheapest = this.state.stations[0];
     for(let i=0; i < this.state.stations.length-1; i++){
-      if(this.state.stations[i].reg_price === 'N/A'){console.log(this.state.stations[i].reg_price)}
-      else if(cheapest.reg_price > this.state.stations[i+1].reg_price){cheapest = this.state.stations[i+1]}
+      if(cheapest.reg_price > this.state.stations[i+1].reg_price){cheapest = this.state.stations[i+1]}
     }
     this.setState({
       cheapest: cheapest
-    })
+    },()=>this.zoomer())
+  }
+
+  zoomer() {
+    var mapZoom;
+    if (this.state.distance <= 1){
+      mapZoom = 14;
+    }
+    else if (this.state.distance <=2){
+      mapZoom = 13;
+    }
+    else if (this.state.distance <= 3){
+      mapZoom = 12;
+    }
+    else if (this.state.distance <= 7){
+      mapZoom = 11
+    }
+    else if (this.state.distance <= 10){
+      mapZoom = 10
+    }
+    else if (this.state.distance <= 25){
+      mapZoom = 9
+    }
+    else if (this.state.distance <= 50){
+      mapZoom = 8
+    }
+
+    this.setState({
+      zoom: mapZoom
+    },()=>console.log(this.state.zoom))
   }
 
 
@@ -74,16 +109,10 @@ class App extends Component {
           <div className='row'>
             <div className='card col-5 ml-3'>
               <div className='card-body'>
+                
                 <div className='row pb-2'>
-                  <h5 className='ml-2 mr-2'>
-                    First:
-                  </h5>
-                  <a className='btn btn-warning' onClick={this.getLocation}>Get Your Location</a>
-                  <span>(May take a sec)</span>
-                </div>
-                <div className='row pb-2'>
-                  <h5 className='ml-2 mr-2'>Distance to search:</h5>
-                  <input  name='distance' placeholder='miles(1-50)' onChange={this.changeHandler} type='number'></input>
+                  <h5 className='ml-2 mr-2'>Search 1-50 miles:</h5>
+                  <input  name='distance' placeholder='default 5 miles' onChange={this.changeHandler} type='number'></input>
                 </div>
                 <a className='btn btn-success btn-block' onClick={this.getData}>Find stations!</a>
               </div>
@@ -111,14 +140,13 @@ class App extends Component {
                 </div>
               :
               <div className='card col-6 ml-4'>
-                <h3 className='mt-3'>Provide your location and a radius to search.</h3>
-                <h4 className='mt-3'>The default search radius is 5 miles.</h4>
+                <h3 className='mt-3'>Provide your location and a radius (maximum 50 miles) to search.</h3>
               </div>
             }
 
           </div>
 
-        {<MapContainer stations={this.state.stations} lat={this.state.latitude} lng={this.state.longitude}/>}
+        {<MapContainer stations={this.state.stations} lat={this.state.latitude} lng={this.state.longitude} zoom={this.state.zoom}/>}
         
       </div>
     );

@@ -3,21 +3,29 @@ import './App.css';
 import {Map, Marker, GoogleApiWrapper} from 'google-maps-react';
  
 export class MapContainer extends Component {
-  mapZoom = 10;
+
   style = {
     height: '60%',
     width: '80%'
   }
 
   render() {
+      // let pos = { lat: 36.70, lng: -117.15 };
+
+      let lat = parseFloat(this.props.lat);
+      let lng = parseFloat(this.props.lng);
+      let pos = { lat, lng };
+
       return (
         <Map 
           google={this.props.google} 
-          zoom={this.mapZoom}
+          zoom={this.props.zoom}
           style={this.style} 
-          center={{
+          center={pos}
+          xcenter={{
             lat: 32.7090788, 
-            lng: -117.15620969999999}}>
+            lng: -117.15620969999999}}
+          >
           { 
             this.props.stations.map((station, index) => 
               <Marker 
